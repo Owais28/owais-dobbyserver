@@ -1,4 +1,4 @@
-const upload = require("../middleware/upload");
+const upload = require("../upload");
 const GridFSBucket = require("mongodb").GridFSBucket;
 
 const uploadFiles = async (req, res) => {

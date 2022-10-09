@@ -177,8 +177,13 @@ var storage = multer.diskStorage({
 
 
 var upload = multer({ storage: storage });
-
-app.get("/dashboard",verifyToken , function (req, res) {
+app.get('/', (req, res) => {
+  res.status(200).json({
+    message: "home",
+  }
+  )
+})
+app.get("/dashboard", verifyToken, function (req, res) {
   if (!user) {
     res.status(403)
       .send({
@@ -251,4 +256,6 @@ app.use(function (err, req, res, next) {
 });
 
 
-module.exports = app;
+app.listen(8080, () => {
+  console.log("Server started!");
+})
