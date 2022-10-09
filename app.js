@@ -25,6 +25,7 @@ const { signup } = require('./controllers/signUp');
 const { signin } = require('./controllers/signIn');
 // const tokenVerify = require('./controllers/tokenVerify');
 const verifyToken = require('./controllers/tokenVerify');
+const Image = require('./models/Image');
 require('dotenv/config');
 
 //Set up default mongoose connection
@@ -95,25 +96,45 @@ app.post('/upload', upload.single('image'), (req, res, next) => {
       data: fs.readFileSync(path.resolve(__dirname + '/temp/images/' + req.file.filename)),
       contentType: req.file.mimetype
     },
+    author : req.body.id
   }
+
   imgModel.create(obj, (err, item) => {
     if (err) {
-      console.log(err);
+      res.json(
+        {
+          message : err
+        }
+      )
+      console.log(err)
     }
     else {
       item.save();
+      res.status(200).json(
+        {
+          message : 'success!'
+        }
+      )
       // res.redirect('/');
     }
   });
-
-  console.log(obj)
-  res.json({
-    message: "Suxce",
-    file: req.file
-  })
+  
 });
 
 // app.post('/signup')
+
+app.get('/images/:id', (req,res) => {
+  try {
+    Image.find({author : req.params.id}, (err, images)=> {
+      res.status(200).json({
+        message : "success!",
+        images 
+      })
+    })
+  } catch (error) {
+    
+  }
+})
 
 
 // // catch 404 and forward to error handler
@@ -132,8 +153,9 @@ app.use(function (err, req, res, next) {
   res.json({
     message:
       "error"
+    });
   });
-});
+  
 
 
 app.listen(process.env.PORT, () => {
