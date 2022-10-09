@@ -3,6 +3,7 @@ const multer = require("multer");
 const { GridFsStorage } = require("multer-gridfs-storage");
 const crypto = require('crypto');
 const path = require("path");
+require('dotenv').config()
 
 var storage = new GridFsStorage({
   url: process.env.DATABASE_URI,
