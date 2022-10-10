@@ -143,18 +143,18 @@ app.post('/search', async (req, res, next) => {
     await Image.find({
       title: new RegExp(req.query.query, 'i'),
       author: req.body.author
-    }).then((err, images) => {
-      if (!err) {
-        res.status(200).json({
-          message: "success!",
-          images
-        })
-      } 
-      res.status(401).json({
-        message : 'not found'
+    }, (err, images) => {
+      res.status(200).json({
+        message: "success!",
+        images
       })
+      if (err) {
+        res.status(401).json({
+          message : 'not found'
+        })
+      }
     })
-  } catch (error) {
+  } catch (err) {
 
   }
 })
