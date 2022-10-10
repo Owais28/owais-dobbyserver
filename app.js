@@ -96,14 +96,14 @@ app.post('/upload', upload.single('image'), (req, res, next) => {
       data: fs.readFileSync(path.resolve(__dirname + '/temp/images/' + req.file.filename)),
       contentType: req.file.mimetype
     },
-    author : req.body.id
+    author: req.body.id
   }
 
   imgModel.create(obj, (err, item) => {
     if (err) {
       res.json(
         {
-          message : err
+          message: err
         }
       )
       console.log(err)
@@ -112,30 +112,45 @@ app.post('/upload', upload.single('image'), (req, res, next) => {
       item.save();
       res.status(200).json(
         {
-          message : 'success!'
+          message: 'success!'
         }
       )
       // res.redirect('/');
     }
   });
-  
+
 });
 
-// app.post('/signup')
-
-app.get('/images/:id', (req,res) => {
+// get all images by author id
+app.get('/images/:id', (req, res) => {
   try {
-    Image.find({author : req.params.id}, (err, images)=> {
+    Image.find({ author: req.params.id }, (err, images) => {
       res.status(200).json({
-        message : "success!",
-        images 
+        message: "success!",
+        images
       })
     })
   } catch (error) {
-    
+
   }
 })
 
+// get all images by user's search query
+app.post('/search', async (req, res) => {
+  try {
+    console.log(req.body)
+    await Image.find({
+      title: new RegExp(req.query.query, 'i'),
+      author: req.body.author
+    }, (err, images) => {
+      res.status(200).json({
+        message: "success!",
+        images
+      })
+    })
+  } catch (error) {
+  }
+})
 
 // // catch 404 and forward to error handler
 app.use(function (req, res, next) {
@@ -153,9 +168,9 @@ app.use(function (err, req, res, next) {
   res.json({
     message:
       "error"
-    });
   });
-  
+});
+
 
 
 app.listen(process.env.PORT, () => {
